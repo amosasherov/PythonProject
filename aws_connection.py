@@ -18,8 +18,7 @@ for reservation in response["Reservations"]:
 
 @app.route('/delete_server')
 def remove():
-    global response, id
-    if len(response["Reservations"]) > 0:
+    if len(id) > 0:
         for x in id:
             ec2.stop_instances(
                 InstanceIds=[
@@ -41,7 +40,6 @@ def remove():
 
 @app.route('/create_server')
 def create():
-    global response
     if len(id) == 0:
          return ec2.run_instances(ImageId='ami-0d5d9d301c853a04a',
                                     InstanceType='t2.micro',
