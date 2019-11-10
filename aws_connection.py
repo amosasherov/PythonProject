@@ -14,11 +14,11 @@ response = ec2.describe_instances(
 for reservation in response["Reservations"]:
     for instance in reservation["Instances"]:
         id.append(instance["InstanceId"])
-
+exists = len(id) > 0
 
 @app.route('/delete_server')
 def remove():
-    if len(id) > 0:
+    if exists:
         for x in id:
             ec2.stop_instances(
                 InstanceIds=[
@@ -40,7 +40,7 @@ def remove():
 
 @app.route('/create_server')
 def create():
-    if len(id) == 0:
+    if exists == False:
          return ec2.run_instances(ImageId='ami-0d5d9d301c853a04a',
                                     InstanceType='t2.micro',
                                     KeyName='Linux_Laptop',
@@ -48,6 +48,12 @@ def create():
                                     MaxCount=1)
     else:
         return "Instance already exists."
+
+
+@app.route('/block_server')
+def block():
+    if exists:
+        pass
 
 
 app.run()
